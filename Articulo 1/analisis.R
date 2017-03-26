@@ -175,3 +175,6 @@ xyplot(Calories ~ Carbohydrates|Category, pch=18)
 cor(Sodium,Calories) 
 
 #maria.
+
+
+#cambio de Miguel y asi 
