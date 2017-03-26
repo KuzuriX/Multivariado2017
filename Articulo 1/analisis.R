@@ -1,4 +1,5 @@
-menu<-read.csv(file.choose(), header = T)
+#menu<-read.csv(file.choose(), header = T)
+menu<-read.csv('menu.csv', header = T)
 
 #plot( base$Calories, base$Calories.from.Fat)
 #plot( base$Sugars, base$Calories)
@@ -32,14 +33,34 @@ library(Hmisc)
 new_names <- gsub(pattern = "*....Daily.Value.", replacement=".DV", names(menu))
 names(menu) <- new_names
 
-diet<- menu[str_detect(menu$Item, "Diet|fat|Fat|Grilled"),]
-cocacola<-menu[str_detect(menu$Item, "Coca-Cola|Coke"),]
-pepper<-menu[str_detect(menu$Item, "Dr Pepper"),]
-sprite<-menu[str_detect(menu$Item, "Sprite"),]
-minutemaid<-menu[str_detect(menu$Item, "Minute Maid"),]
-sandwich<-menu[str_detect(menu$Item, "Sandwich"),]
-wrap<-menu[str_detect(menu$Item, "McWrap"),]
-nuggets<-menu[str_detect(menu$Item, "Nuggets"),]
+menu$diet[str_detect(menu$Item, "Diet|fat|Fat|Grilled")]<-1
+menu$subcategory[str_detect(menu$Item, "Coca-Cola|Coke")]<-"cocacola"
+menu$subcategory[str_detect(menu$Item, "Dr Pepper")]<-"pepper"
+menu$subcategory[str_detect(menu$Item, "Sprite")]<-"sprite"
+menu$subcategory[str_detect(menu$Item, "Minute Maid")]<-"minutemaid"
+menu$subcategory[str_detect(menu$Item, "Sandwich")]<-"sandwich"
+menu$subcategory[str_detect(menu$Item, "McWrap")]<-"wrap"
+menu$subcategory[str_detect(menu$Item, "Nuggets")]<-"nuggets"
+menu$subcategory[str_detect(menu$Item, "McMuffin")]<-"McMuffin"
+menu$subcategory[str_detect(menu$Item, "Biscuit")]<-"Biscuit"
+menu$subcategory[str_detect(menu$Item, "McGriddles")]<-"McGriddles"
+menu$subcategory[str_detect(menu$Item, "Big Breakfast")]<-"Big Breakfast"
+menu$subcategory[str_detect(menu$Item, "Tea")]<-"Tea"
+menu$subcategory[str_detect(menu$Item, "Coffee")]<-"Coffee"
+menu$subcategory[str_detect(menu$Item, "Latte")]<-"Latte"
+menu$subcategory[str_detect(menu$Item, "Mocha")]<-"Mocha"
+menu$subcategory[str_detect(menu$Item, "Chocolate")]<-"Chocolate"
+menu$subcategory[str_detect(menu$Item, "Iced")]<-"Iced Coffe"
+menu$subcategory[str_detect(menu$Item, "Frapp")]<-"Frappe"
+menu$subcategory[str_detect(menu$Item, "Shake")]<-"Milk Shake"
+menu$subcategory[str_detect(menu$Item, "Smoothie")]<-"Smoothie"
+menu$subcategory[str_detect(menu$Item, "McFlurry")]<-"McFlurry"
+
+
+
+menu$diet[is.na(menu$diet)] <- 0
+menu$subcategory[is.na(menu$subcategory)] <- "Others"
+
 
 #drinks - select only fields that contain "fl oz" string and sperately 'carton' string
 drinks.oz <- menu[str_detect(menu$Serving.Size, " fl oz.*"),]
@@ -65,12 +86,12 @@ menu2$Type <- rep("drinks.ml", nrow(menu2))
 food.g$Type <- rep("food.g", nrow(food.g))
 menu2 <- rbind(menu2,food.g)
 
-table(menu2$Category)
+table(menu2$Category, menu2$subcategory)
 table(menu2$Type)
 
 hist(menu2$Calories)
 
-attach(menu2)
+#attach(menu2)
 plot(Serving.Size, Calories)
 
 bvbox(cbind(Serving.Size,Calories),mtitle="",
