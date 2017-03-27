@@ -17,6 +17,7 @@ if("repr" %in% rownames(installed.packages()) == FALSE) {install.packages("repr"
 if("MVA" %in% rownames(installed.packages()) == FALSE) {install.packages("MVA")}
 if("Hmisc" %in% rownames(installed.packages()) == FALSE) {install.packages("Hmisc")}
 if("dtplyr" %in% rownames(installed.packages()) == FALSE) {install.packages("dtplyr")}
+if("corrplot" %in% rownames(installed.packages()) == FALSE) {install.packages("corrplot")}
 
 
 library(ggplot2) 
@@ -28,6 +29,9 @@ library(repr)
 library(MVA)
 library(data.table)
 library(Hmisc)
+library(corrplot)
+
+### RECODIFICACION
 
 
 new_names <- gsub(pattern = "*....Daily.Value.", replacement=".DV", names(menu))
@@ -62,6 +66,13 @@ menu$diet[is.na(menu$diet)] <- 0
 menu$subcategory[is.na(menu$subcategory)] <- "Others"
 
 
+menu$Total.Fat.DV<-menu$Total.Fat.DV/65
+menu$Saturated.Fat.DV<-menu$Saturated.Fat.DV/20
+menu$Cholesterol.DV<-menu$Cholesterol.DV/300
+menu$Sodium.DV<-menu$Sodium.DV/2400
+
+
+
 #drinks - select only fields that contain "fl oz" string and sperately 'carton' string
 drinks.oz <- menu[str_detect(menu$Serving.Size, " fl oz.*"),]
 drinks.ml <- menu[str_detect(menu$Serving.Size, 'carton'),]
@@ -92,16 +103,26 @@ table(menu2$Type)
 hist(menu2$Calories)
 
 #attach(menu2)
-plot(Serving.Size, Calories)
+plot(menu2$Serving.Size, menu2$Calories)
 
-bvbox(cbind(Serving.Size,Calories),mtitle="",
+bvbox(cbind(menu2$Serving.Size,menu2$Calories),mtitle="",
       cex.lab=0.7,pch=18)
-fuera=identify(Serving.Size,Calories,rownames(menu2))
-Item[fuera]
+fuera=identify(menu2$Serving.Size,menu2$Calories,rownames(menu2))
+menu2$Item[fuera]
 
 #### Esto es una pureba para quitar los valores extremos
 
-menu2<-menu2[-fuera,]
+menu3<-menu2[-fuera,]
+
+bvbox(cbind(menu3$Serving.Size,menu3$Calories),mtitle="",
+      cex.lab=0.7,pch=18)
+
+### grafico de matriz de correlaciones
+library(car)
+scatterplotMatrix(menu2[,2:25],pch=".",cex=1.5)
+
+M <- cor(menu2[,3:25])
+corrplot(M, method="circle")
 
 ## Calorias por tamanno de porcion
 
@@ -110,8 +131,9 @@ e+geom_label(aes(label = Category), nudge_x = 1,
              nudge_y = 1, check_overlap = TRUE)
 e+geom_point()
 
+cor(menu2$Serving.Size,menu2$Calories)
 
-xyplot(Calories ~ Serving.Size|Category, pch=18)
+xyplot(Calories ~ Serving.Size|Category, pch=18, menu2)
 
 ##Calorias de grasa por calorias (talvez muy obvio)
 
