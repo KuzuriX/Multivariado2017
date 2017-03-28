@@ -19,7 +19,7 @@ if("Hmisc" %in% rownames(installed.packages()) == FALSE) {install.packages("Hmis
 if("dtplyr" %in% rownames(installed.packages()) == FALSE) {install.packages("dtplyr")}
 if("corrplot" %in% rownames(installed.packages()) == FALSE) {install.packages("corrplot")}
 
-
+library(car)
 library(ggplot2) 
 library(readr) 
 library(tidyverse)
@@ -37,7 +37,7 @@ library(corrplot)
 new_names <- gsub(pattern = "*....Daily.Value.", replacement=".DV", names(menu))
 names(menu) <- new_names
 
-menu$diet[str_detect(menu$Item, "Diet|fat|Fat|Grilled")]<-1
+menu$diet[str_detect(menu$Item, "Diet|fat|Fat|Grilled|Coffe")]<-1
 menu$subcategory[str_detect(menu$Item, "Coca-Cola|Coke")]<-"cocacola"
 menu$subcategory[str_detect(menu$Item, "Dr Pepper")]<-"pepper"
 menu$subcategory[str_detect(menu$Item, "Sprite")]<-"sprite"
@@ -70,7 +70,12 @@ menu$Total.Fat.DV<-menu$Total.Fat.DV/65
 menu$Saturated.Fat.DV<-menu$Saturated.Fat.DV/20
 menu$Cholesterol.DV<-menu$Cholesterol.DV/300
 menu$Sodium.DV<-menu$Sodium.DV/2400
-
+menu$Carbohydrates.DV=menu$Carbohydrates.DV/300
+menu$Dietary.Fiber.DV=menu$Dietary.Fiber.DV/25
+menu$Vitamin.A.DV=menu$Vitamin.A.DV/5000
+menu$Vitamin.C.DV=menu$Vitamin.C.DV/60
+menu$Calcium.DV=menu$Calcium.DV/1000
+menu$Iron.DV=menu$Iron.DV/18
 
 
 #drinks - select only fields that contain "fl oz" string and sperately 'carton' string
@@ -112,45 +117,56 @@ menu2$Item[fuera]
 
 #### Esto es una pureba para quitar los valores extremos
 
+## desoues de ver que la correlacion era baja y que no cambia mucho
+## se mantienen esos valores extremos
+
 menu3<-menu2[-fuera,]
 
 bvbox(cbind(menu3$Serving.Size,menu3$Calories),mtitle="",
       cex.lab=0.7,pch=18)
 
 ### grafico de matriz de correlaciones
-library(car)
+
 scatterplotMatrix(menu2[,2:25],pch=".",cex=1.5)
 
 M <- cor(menu2[,3:25])
 corrplot(M, method="circle")
 
-## Calorias por tamanno de porcion
+## Calorias por tamanno de porcion (por categoria)
 
 e <- ggplot(menu2, aes(Serving.Size, Calories))
 e+geom_label(aes(label = Category), nudge_x = 1,
-             nudge_y = 1, check_overlap = TRUE)
-e+geom_point()
-
-cor(menu2$Serving.Size,menu2$Calories)
+             nudge_y = 1)
+e+geom_point(aes(colour = Category))
 
 xyplot(Calories ~ Serving.Size|Category, pch=18, menu2)
 
-##Calorias de grasa por calorias (talvez muy obvio)
+qplot(Calories, Serving.Size, data = menu2, facets = ~Category, colour = Type)
+
+qplot(Calories, Serving.Size, data = menu2, facets = ~Category, colour = factor(diet))
+
+cor(menu2$Serving.Size,menu2$Calories)
+
+##Calorias de grasa por calorias (talvez muy obvio) 
+### parece que no
 
 e <- ggplot(menu2, aes(Calories.from.Fat, Calories))
 e+geom_point()
 
-xyplot(Calories.from.Fat ~ Calories|Category, pch=18)
+qplot(Calories, Calories.from.Fat, data = menu2, facets = ~Category, colour = Type)
+qplot(Calories, Calories.from.Fat, data = menu2, facets = ~Category, colour = factor(diet))
+
 
 cor(Calories.from.Fat,Calories) ##Demasiado alto 
 
 
 ##Grasa total por calorias
+### parece que no
 
 e <- ggplot(menu2, aes(Total.Fat, Calories))
 e+geom_point()
 
-xyplot(Total.Fat ~ Calories|Category, pch=18)
+qplot(Calories, Total.Fat, data = menu2, facets = ~Category, colour = Type)
 
 cor(Calories,Total.Fat) ##Demasiado alto tambien
 
@@ -160,16 +176,15 @@ cor(Calories,Total.Fat) ##Demasiado alto tambien
 e <- ggplot(menu2, aes(Saturated.Fat, Serving.Size))
 e+geom_point()
 
-xyplot(Total.Fat ~ Saturated.Fat|Category, pch=18)
-
-
+qplot(Saturated.Fat, Serving.Size, data = menu2, facets = ~Category, colour = Type)
+# los McFLurrys son lo que a pesar de estar en smoothies se mide la porcion en gramos
 
 ##Colesteros por calorias
 
 e <- ggplot(menu2, aes(Cholesterol, Calories))
 e+geom_point()
 
-xyplot(Cholesterol ~ Calories|Category, pch=18)
+qplot(Cholesterol, Calories, data = menu2, facets = ~Category, colour = Type)
 
 cor(Cholesterol,Calories) 
 
@@ -178,6 +193,8 @@ cor(Cholesterol,Calories)
 
 e <- ggplot(menu2, aes(Cholesterol, Total.Fat))
 e+geom_point()
+
+qplot(Cholesterol, Total.Fat, data = menu2, facets = ~Category, colour = Type)
 
 xyplot(Cholesterol ~ Total.Fat|Category, pch=18)
 
