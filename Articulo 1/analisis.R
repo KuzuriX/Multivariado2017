@@ -127,8 +127,6 @@ hist(menu2$Calories)
 
 ### grafico de matriz de correlaciones
 
-scatterplotMatrix(menu2[,2:25],pch=".",cex=1.5)
-
 M <- cor(menu2[,3:25])
 corrplot(M, method="circle")
 
