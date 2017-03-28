@@ -37,7 +37,7 @@ library(corrplot)
 new_names <- gsub(pattern = "*....Daily.Value.", replacement=".DV", names(menu))
 names(menu) <- new_names
 
-menu$diet[str_detect(menu$Item, "Diet|fat|Fat|Grilled|Coffe")]<-1
+menu$diet[str_detect(menu$Item, "Diet|fat|Fat|Grilled|^Coffe|Free")]<-1
 menu$subcategory[str_detect(menu$Item, "Coca-Cola|Coke")]<-"cocacola"
 menu$subcategory[str_detect(menu$Item, "Dr Pepper")]<-"pepper"
 menu$subcategory[str_detect(menu$Item, "Sprite")]<-"sprite"
@@ -108,22 +108,22 @@ table(menu2$Type)
 hist(menu2$Calories)
 
 #attach(menu2)
-plot(menu2$Serving.Size, menu2$Calories)
-
-bvbox(cbind(menu2$Serving.Size,menu2$Calories),mtitle="",
-      cex.lab=0.7,pch=18)
-fuera=identify(menu2$Serving.Size,menu2$Calories,rownames(menu2))
-menu2$Item[fuera]
-
-#### Esto es una pureba para quitar los valores extremos
-
-## desoues de ver que la correlacion era baja y que no cambia mucho
-## se mantienen esos valores extremos
-
-menu3<-menu2[-fuera,]
-
-bvbox(cbind(menu3$Serving.Size,menu3$Calories),mtitle="",
-      cex.lab=0.7,pch=18)
+# plot(menu2$Serving.Size, menu2$Calories)
+# 
+# bvbox(cbind(menu2$Serving.Size,menu2$Calories),mtitle="",
+#       cex.lab=0.7,pch=18)
+# fuera=identify(menu2$Serving.Size,menu2$Calories,rownames(menu2))
+# menu2$Item[fuera]
+# 
+# #### Esto es una pureba para quitar los valores extremos
+# 
+# ## desoues de ver que la correlacion era baja y que no cambia mucho
+# ## se mantienen esos valores extremos
+# 
+# menu3<-menu2[-fuera,]
+# 
+# bvbox(cbind(menu3$Serving.Size,menu3$Calories),mtitle="",
+#       cex.lab=0.7,pch=18)
 
 ### grafico de matriz de correlaciones
 
