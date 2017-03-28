@@ -145,6 +145,40 @@ qplot(Calories, Serving.Size, data = menu2, facets = ~Category, colour = factor(
 
 cor(menu2$Serving.Size,menu2$Calories)
 
+
+###### COMPONENETES PUROS  ################
+
+## SODIO, COLESTEROS, AZUCAR Y PROTEINA 
+
+# Sodio y calorias
+e <- ggplot(menu2, aes(Sodium, Calories))
+e+geom_point()
+
+qplot(Sodium, Calories, data = menu2, facets = ~Category, colour = Type)
+qplot(Sodium, Calories, data = menu2, facets = ~Category, colour = factor(diet))
+
+
+cor(menu2$Sodium,menu2$Calories) #Correlacion 71%
+
+# azucar y calorias
+e <- ggplot(menu2, aes(Sugars, Calories))
+e+geom_point()
+
+n<-qplot(Sugars, Calories, data = menu2, facets = ~Category, colour = Type)
+
+n + annotate(cor(menu2$Sugars, menu2$Calories), legend.position = "bottom")
+
+d<-qplot(Sugars, Calories, data = menu2, facets = ~Category, colour = factor(diet))
+d + stat_summary(fun.y = "mean", colour = "blue", geom = "point")
+
+d + stat_summary(fun.data = "mean_sdl")
+
+
+cor(menu2$Sugars,menu2$Calories) #Correlacion 26
+
+?
+
+
 ##Calorias de grasa por calorias (talvez muy obvio) 
 ### parece que no
 
