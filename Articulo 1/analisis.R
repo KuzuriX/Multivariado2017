@@ -416,27 +416,26 @@ qplot(Calories,Cholesterol, data = menu2, facets = ~Category, colour = Type)
 cor(menu2$Calories,menu2$Cholesterol) 
 
 
+############
+
+## Calorias por tamanno de porcion (por categoria)
+
+e <- ggplot(menu2, aes(Serving.Size, Calories))
+e+geom_label(aes(label = Category), nudge_x = 1,
+             nudge_y = 1)
+e+geom_point(aes(colour = Category))
+
+qplot(Calories, Serving.Size, data = menu2, facets = ~Category, colour = Type)
+
+qplot(Calories, Serving.Size, data = menu2, facets = ~Category, colour = factor(diet))
+
+cor(menu2$Serving.Size,menu2$Calories)
+
 
 
 
 
 ########tamañoo de porcion 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#############################################################################################################
 
 
 ##Grasa saturada por tamanno de porcion
@@ -449,55 +448,33 @@ qplot(Saturated.Fat, Serving.Size, data = menu2, facets = ~Category, colour = Ty
 
 
 
+e <- ggplot(menu2, aes(Total.Fat, Serving.Size))
+e+geom_point()
+
+qplot(Total.Fat, Serving.Size, data = menu2, facets = ~Category, colour = Type)
+# Breakfast , beef and pork
+
+
+
+
 ## Sodio por Tamanno
 e <- ggplot(menu2, aes(Sodium, Serving.Size))
 e+geom_point()
 
-xyplot(Sodium ~ Serving.Size|Category, pch=18)
-
+qplot(Sodium, Serving.Size, data = menu2, facets = ~Category, colour = Type)
 cor(menu2$Sodium,menu2$Serving.Size) 
 
+# Breakfast , beef and pork, chicken and fish
 
 
 
-hist(menu2$Calories)
 
-#attach(menu2)
-# plot(menu2$Serving.Size, menu2$Calories)
-# 
-# bvbox(cbind(menu2$Serving.Size,menu2$Calories),mtitle="",
-#       cex.lab=0.7,pch=18)
-# fuera=identify(menu2$Serving.Size,menu2$Calories,rownames(menu2))
-# menu2$Item[fuera]
-# 
-# #### Esto es una pureba para quitar los valores extremos
-# 
-# ## desoues de ver que la correlacion era baja y que no cambia mucho
-# ## se mantienen esos valores extremos
-# 
-# menu3<-menu2[-fuera,]
-# 
-# bvbox(cbind(menu3$Serving.Size,menu3$Calories),mtitle="",
-#       cex.lab=0.7,pch=18)
 
 ### grafico de matriz de correlaciones
 
 M <- cor(menu2[,3:25])
 corrplot(M, method="circle")
 
-## Calorias por tamanno de porcion (por categoria)
 
-e <- ggplot(menu2, aes(Serving.Size, Calories))
-e+geom_label(aes(label = Category), nudge_x = 1,
-             nudge_y = 1)
-e+geom_point(aes(colour = Category))
-
-xyplot(Calories ~ Serving.Size|Category, pch=18, menu2)
-
-qplot(Calories, Serving.Size, data = menu2, facets = ~Category, colour = Type)
-
-qplot(Calories, Serving.Size, data = menu2, facets = ~Category, colour = factor(diet))
-
-cor(menu2$Serving.Size,menu2$Calories)
 
 
