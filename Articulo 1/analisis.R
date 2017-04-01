@@ -336,6 +336,7 @@ qplot( menu2$Cholesterol,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, c
 
 
 
+
 ############
 
 ## Calorias por tamanno de porcion (por categoria)
