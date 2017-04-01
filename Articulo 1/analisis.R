@@ -30,6 +30,8 @@ library(MVA)
 library(data.table)
 library(Hmisc)
 library(corrplot)
+library(corrgram)
+library(gridExtra)
 
 ### RECODIFICACION
 
@@ -120,243 +122,103 @@ levels(menu2$Type)
 
 
 
-#componentes puros: Sodio- carbohidratos y azucar(Glucidos)- grasa(insaturada-saturada-trans) 
+#componentes puros: Sodio- carbohidratos y azucar(Glucidos)- grasa(insaturada-saturada-trans) y colesterol
+#componentes antioxidantes: Proteinas, vitamina A, vitamina C, Hierro, Dietary Fiber
 
 
 
-#########3#Glucidos
+#1 -- Lipidicos, glucidos, sodio contra calorias 
+#2-- Lipidicos, glucidos, sodios contra antioxidantes 
 
-cor(menu2$Sugars,menu2$Carbohydrates) #0.76
 
-a <- qplot(menu2$Carbohydrates, geom = c("density"), fill = I("tomato"), xlab = "Carbohidratos", ylab = "Densidad", data = menu2)
+
+
+####### 1 
+
+##########Glucidos con calorias 
+
+
+#densidad de las variables 
+
+a <- qplot(menu2$Carbohydrates, geom = c("density"), fill = I("tomato"), xlab = "Carbohidratos", ylab = "Densidad", data = menu2,facets = ~ Category)
 a
-
-b<- qplot(menu2$Sugars, geom = c("density"), fill = I("tomato"), xlab = "Azúcar", ylab = "Densidad", data = menu2)
+b<- qplot(menu2$Sugars, geom = c("density"), fill = I("tomato"), xlab = "Azúcar", ylab = "Densidad", data = menu2,facets = ~ Category)
 b
 
 
-q1=qplot(Sugars,Carbohydrates, data = menu2,xlab = deparse(substitute(Azúcar)),  ylab = deparse(substitute(Carbohidratos)))
-q1
 
-q=qplot(Sugars,Carbohydrates, data = menu2, facets = ~ Category, colour = subcategory)
-q
-
-
-library(gridExtra)
-grid.arrange(a,b,q1,q, ncol = 2)
-
-
-
-###### Resultados > HAY CORRELACION ALTA ENTRE AZUCAR Y CARBOH.. especificamente beverages, coffee and Smothies 
-
-
-
-###########Grasas
-
-#vamos a crear la insaturada
-
-menu2$insaturada= menu2$Total.Fat-(menu2$Trans.Fat+menu2$Saturated.Fat)
-
-
-
-library(corrgram)
-
-minibase=cbind(menu2$insaturada,menu2$Saturated.Fat,menu2$Trans.Fat,menu2$Cholesterol)
-colnames(minibase)=c("insaturada","saturada","trans","colesterol")
-corrgram(minibase, upper.panel=panel.conf,order=T,abs=T,diag.panel=panel.density)
-
-
-M <- cor(minibase)
-corrplot(M, method="circle",order ="AOE") 
-
-#corr alta entre insaturada y colest , insaturada y saturada, colesterol y sat, saturada y trans
-
-
-
-#insat y colest
-cor(menu2$insaturada,menu2$Cholesterol)#0.62
-plot(menu2$insaturada,menu2$Cholesterol)
-
-qplot(insaturada, Cholesterol, data = menu2, facets = ~Category, colour = subcategory)
-
-#   comportamiento lineal en Beef & pork , coffee & tea, smoothies & shakes, chicken and fish
-
-cor(menu2$insaturada[menu2$Category=="Coffee & Tea" ],menu2$Cholesterol[menu2$Category=="Coffee & Tea"])
-cor(menu2$insaturada[menu2$Category=="Beef & Pork" ],menu2$Cholesterol[menu2$Category=="Beef & Pork"])
-cor(menu2$insaturada[menu2$Category=="Smoothies & Shakes" ],menu2$Cholesterol[menu2$Category=="Smoothies & Shakes"])
-cor(menu2$insaturada[menu2$Category=="Chicken & Fish" ],menu2$Cholesterol[menu2$Category=="Chicken & Fish"])
-
-
-
-#insaturada y saturada
-cor(menu2$insaturada,menu2$Saturated.Fat)#0.64
-plot(menu2$insaturada,menu2$Saturated.Fat)  # en el plot pareciera que no hay una relacion lineal
-
-qplot(insaturada, Saturated.Fat, data = menu2, facets = ~Category, colour = subcategory)
-
-cor(menu2$insaturada[menu2$Category=="Chicken & Fish" ],menu2$Saturated.Fat[menu2$Category=="Chicken & Fish"])
-cor(menu2$insaturada[menu2$Category=="Beef & Pork" ],menu2$Saturated.Fat[menu2$Category=="Beef & Pork"])
-cor(menu2$insaturada[menu2$Category=="Smoothies & Shakes" ],menu2$Saturated.Fat[menu2$Category=="Smoothies & Shakes"])
-cor(menu2$insaturada[menu2$Category=="Coffee & Tea" ],menu2$Saturated.Fat[menu2$Category=="Coffee & Tea"])
-cor(menu2$insaturada[menu2$Category=="Breakfast" ],menu2$Saturated.Fat[menu2$Category=="Breakfast"])
-
-
-#RESULTADOS:  COR ALTA  "Chicken & Fish" "Beef & Pork" Smoothies & Shakes  "Coffee & Tea  Breakfast"
-
-
-#colesterol y saturada
-
-cor(menu2$Cholesterol,menu2$Saturated.Fat)#0.63
-
-plot(menu2$Saturated.Fat,menu2$Cholesterol)  # en el plot pareciera que no hay una relacion lineal
-
-qplot( Saturated.Fat,Cholesterol, data = menu2, facets = ~Category, colour = subcategory)
-
-#Resultados: corr alta en Beef & Pork, Chicken and fish, Coffee and tea , Smoothies and salads 
-
-
-#Saturadas y trans 
-
-cor(menu2$Trans.Fat,menu2$Saturated.Fat)#0.62
-
-plot(menu2$Saturated.Fat,menu2$Trans.Fat)  # en el plot pareciera que no hay una relacion lineal
-
-qplot( Saturated.Fat,Trans.Fat, data = menu2, facets = ~Category, colour = subcategory)
-
-cor(menu2$Trans.Fat[menu2$Category=="Beef & Pork" ],menu2$Saturated.Fat[menu2$Category=="Beef & Pork"])
-cor(menu2$Trans.Fat[menu2$Category=="Coffee & Tea" ],menu2$Saturated.Fat[menu2$Category=="Coffee & Tea"])
-cor(menu2$Trans.Fat[menu2$Category=="Smoothies & Shakes" ],menu2$Saturated.Fat[menu2$Category=="Smoothies & Shakes"])
-
-
-
-
-#############Proteinas, vitamina A, vitamina C, Hierro, Calcio, Dietary Fiber
-
-
-minibase=cbind(menu2$Protein,menu2$Vitamin.A.DV,menu2$Vitamin.C.DV,menu2$Iron.DV,menu2$Calcium.DV,menu2$Dietary.Fiber)
-colnames(minibase)=c("proteina","vitamina A","vitamina C","Hierro","Calcio","Fibra")
-corrgram(minibase, upper.panel=panel.conf,order=T,abs=T,diag.panel=panel.density)
-
-#Correlaciones altas:
-#Hierro con Fibra :0.74
-#Hierro proteina : 0.79
-#Fibra con Proteina: 0.64
-
-
-
-#HIERRO CON fIBRA 
-
-###REVISAR 
-
-plot(menu2$Iron.DV,menu2$Dietary.Fiber)  #no hay relacion lineal
-
-qplot( menu2$Iron.DV,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = subcategory)
-
-
-
-#Hierro con prot
-
-#REVISAR
-
-plot(menu2$Iron.DV,menu2$Protein)  #no hay relacion lineal
-
-qplot( menu2$Iron.DV,menu2$Protein, data = menu2, facets = ~Category, colour = subcategory)
-
-
-
-#Fibra con proteina 
-#parece que no hay relacion 
-
-plot(menu2$Dietary.Fiber,menu2$Protein)  #no hay relacion lineal
-qplot( menu2$Dietary.Fiber,menu2$Protein, data = menu2, facets = ~Category, colour = subcategory)
-
-
-
-
-
-############### sodio 
-minibase=cbind(menu2$Protein,menu2$Vitamin.A.DV,menu2$Vitamin.C.DV,menu2$Iron.DV,menu2$Calcium.DV,menu2$Dietary.Fiber,menu2$Sodium)
-colnames(minibase)=c("proteina","vitamina A","vitamina C","Hierro","Calcio","Fibra","sod")
-corrgram(minibase, upper.panel=panel.conf,order=T,abs=T,diag.panel=panel.density)
-
-
-#corr de sodio con proteina (.87)
-#corr de sodio con hierro (.87)
-#corr de sodio con fibra (.69)
-
-plot(menu2$Sodium,menu2$Protein)  #lineal
-plot(menu2$Sodium,menu2$Iron.DV)#maso lineal
-plot(menu2$Sodium,menu2$Dietary.Fiber)  #no es muy lineal
-
-
-qplot( menu2$Sodium,menu2$Protein, data = menu2, facets = ~Category, colour = subcategory)
-
-#sodio con proteina:  relacion lineal en coffee and tea, smoothies and shakes, snacks
-
-
-cor(menu2$Sodium[menu2$Category=="Snacks & Sides" ],menu2$Protein[menu2$Category=="Snacks & Sides"])
-cor(menu2$Sodium[menu2$Category=="Coffee & Tea" ],menu2$Protein[menu2$Category=="Coffee & Tea"])
-cor(menu2$Sodium[menu2$Category=="Smoothies & Shakes" ],menu2$Protein[menu2$Category=="Smoothies & Shakes"])
-
-
-
-#### no se  creo que no hay relacon lineal
-qplot( menu2$Sodium,menu2$Iron.DV, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Sodium,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = subcategory)
-
-
-
-
-#####Calorias 
-
-
-
-
-############calorias con glucidos 
-
-
-minibase=cbind(menu2$Carbohydrates,menu2$Sugars,menu2$Calories)
-colnames(minibase)=c("carb","azucar","calorias")
-corrgram(minibase, upper.panel=panel.conf,order=T,abs=T,diag.panel=panel.density)
-#corr alta calorias con carbohidratos
-
-
-e <- ggplot(menu2, aes(Calories, Carbohydrates))
-e+ geom_point(aes(color=Category)) + scale_color_brewer(type="seq", palette="Accent")
 
 qplot( menu2$Calories,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = subcategory)
-
-
-# azucar y calorias
 
 
 qplot( menu2$Calories,menu2$Sugars, data = menu2, facets = ~Category, colour = subcategory)
 
 
-e <- ggplot(menu2, aes(Sugars, Calories))
-e+geom_point()
+
+#grid.arrange(c,d, ncol = 2)
 
 
-d<-qplot(Sugars, Calories, data = menu2, facets = ~Category, colour = factor(diet))
-d + stat_summary(fun.y = "mean", colour = "blue", geom = "point")
+
+cor(menu2$Carbohydrates[menu2$Category=="Coffee & Tea" ],menu2$Calories[menu2$Category=="Coffee & Tea"]) #0.94
+cor(menu2$Carbohydrates[menu2$Category=="Salads" ],menu2$Calories[menu2$Category=="Salads"]) #0.78
+cor(menu2$Carbohydrates[menu2$Category=="Desserts" ],menu2$Calories[menu2$Category=="Desserts"])
 
 
-cor(menu2$Sugars,menu2$Calories) #Correlacion 26
+#Glucidos con antioxidantes
 
-#?
 
+qplot( menu2$Protein,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Iron.DV,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Dietary.Fiber,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Vitamin.A.DV,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Vitamin.C.DV,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = subcategory)
+
+
+
+
+qplot( menu2$Protein,menu2$Sugars, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Iron.DV,menu2$Sugars, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Dietary.Fiber,menu2$Sugars, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Vitamin.A.DV,menu2$Sugars, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Vitamin.C.DV,menu2$Sugars, data = menu2, facets = ~Category, colour = subcategory)
+
+
+
+
+##########SODIO
 
 
 
 ##### Sodio y calorias
-e <- ggplot(menu2, aes(Sodium, Calories))
-e+geom_point()
 
-qplot(Sodium, Calories, data = menu2, facets = ~Category, colour = Type)
-qplot(Sodium, Calories, data = menu2, facets = ~Category, colour = factor(diet))
+qplot(Sodium, Calories, data = menu2, facets = ~Category, colour = subcategory)
 
 
-cor(menu2$Sodium,menu2$Calories) #Correlacion 71%
+
+
+###sodio y antioxidantes 
+
+
+
+qplot( menu2$Sodium,menu2$Protein, data = menu2, facets = ~Category, colour = subcategory)
+
+#### no se  creo que no hay relacon lineal
+qplot( menu2$Sodium,menu2$Iron.DV, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Sodium,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Sodium,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = subcategory)
+
+
+
+
+
+
+###########lipidos 
+
+
+#vamos a crear la insaturada
+
+menu2$insaturada= menu2$Total.Fat-(menu2$Trans.Fat+menu2$Saturated.Fat)
+
 
 
 
@@ -370,9 +232,8 @@ cor(menu2$Sodium,menu2$Calories) #Correlacion 71%
 e <- ggplot(menu2, aes(Total.Fat, Calories))
 e+geom_point()
 
-qplot(Calories, Total.Fat, data = menu2, facets = ~Category, colour = Type)
+qplot(Calories, Total.Fat, data = menu2, facets = ~Category, colour = subcategory)
 
-cor(menu2$Calories,menu2$Total.Fat) ##Demasiado alto tambien
 
 
 
@@ -380,9 +241,8 @@ cor(menu2$Calories,menu2$Total.Fat) ##Demasiado alto tambien
 e <- ggplot(menu2, aes(insaturada, Calories))
 e+geom_point()
 
-qplot(Calories,insaturada, data = menu2, facets = ~Category, colour = Type)
+qplot(Calories,insaturada, data = menu2, facets = ~Category, colour = subcategory)
 
-cor(menu2$Calories,menu2$insaturada) 
 
 
 
@@ -390,9 +250,9 @@ cor(menu2$Calories,menu2$insaturada)
 e <- ggplot(menu2, aes(Saturated.Fat , Calories))
 e+geom_point()
 
-qplot(Calories,Saturated.Fat, data = menu2, facets = ~Category, colour = Type)
+qplot(Calories,Saturated.Fat, data = menu2, facets = ~Category, colour = subcategory)
 
-cor(menu2$Calories,menu2$Saturated.Fat) 
+
 
 
 #trans > no hay corr
@@ -402,18 +262,78 @@ e+geom_point()
 
 qplot(Calories,Trans.Fat, data = menu2, facets = ~Category, colour = Type)
 
-cor(menu2$Calories,menu2$Trans.Fat) 
+
+
+
+#grasas con antioxidantes 
+
+
+
+# no hay relacion lineal en ninguna 
+qplot( menu2$Trans.Fat,menu2$Protein, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Trans.Fat,menu2$Iron.DV, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Trans.Fat,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Trans.Fat,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = subcategory)
+
+
+
+qplot( menu2$Saturated.Fat,menu2$Protein, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Saturated.Fat,menu2$Iron.DV, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Saturated.Fat,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Saturated.Fat,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = subcategory)
+
+
+
+qplot( menu2$insaturada,menu2$Protein, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$insaturada,menu2$Iron.DV, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$insaturada,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$insaturada,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = subcategory)
 
 
 
 
-#colesterol > dudas
-e <- ggplot(menu2,aes(Cholesterol, Calories))
-e+geom_point()
 
-qplot(Calories,Cholesterol, data = menu2, facets = ~Category, colour = Type)
 
-cor(menu2$Calories,menu2$Cholesterol) 
+
+#insat y colest
+
+qplot(insaturada, Cholesterol, data = menu2, facets = ~Category, colour = subcategory)
+
+
+#colesterol y saturada
+
+qplot( Saturated.Fat,Cholesterol, data = menu2, facets = ~Category, colour = subcategory)
+
+qplot( Trans.Fat,Cholesterol, data = menu2, facets = ~Category, colour = subcategory)
+
+
+
+
+#colesterol con antiox
+
+
+qplot( menu2$Cholesterol,menu2$Protein, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Cholesterol,menu2$Iron.DV, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Cholesterol,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Cholesterol,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = subcategory)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ############
@@ -435,7 +355,7 @@ cor(menu2$Serving.Size,menu2$Calories)
 
 
 
-########tamañoo de porcion 
+########tamaño de porcion 
 
 
 ##Grasa saturada por tamanno de porcion
