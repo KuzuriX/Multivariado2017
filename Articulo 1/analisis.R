@@ -147,48 +147,17 @@ levels(menu2$Category)[9]= "Snacks"
 
 
 
+menu3=subset(menu2,menu2$Sodium.DV<100)
 
 ####### 1 
 
 ##########Glucidos con calorias 
 
 
-#densidad de las variables 
-
-a <- qplot(menu2$Carbohydrates, geom = c("histogram"), fill = I("tomato"), xlab = "Carbohidratos", ylab = "Densidad", data = menu2,facets = ~ Category)
-a
-b<- qplot(menu2$Sugars, geom = c("density"), fill = I("tomato"), xlab = "Azúcar", ylab = "Densidad", data = menu2,facets = ~ Category)
-b
 
 #col1=c("antiquewhite1","aquamarine4","black", "blue4","brown3","cadetblue1","chartreuse1","chocolate1","cyan","darkgoldenrod1","darkmagenta")
 #col2=c("deeppink","lightcoral","lightgoldenrod1","mediumorchid1","orangered","seagreen1","yellowgreen","slategray4","thistle1","peru","palevioletred")
 #col=c(col1,col2)
-
-q=qplot( menu2$Calories,menu2$Carbohydrates,data = menu2, facets = ~Category,col=Productos)
-
-q+geom_rug(sides = "bl", col="Black")+labs( x ="Calorías(Kcal)", y = "Carbohidratos(g)")+
-  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
-theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
-
-
-
-q=qplot( menu2$Calories,menu2$Sugars,data = menu2, facets = ~Category,col=Productos)
-
-q+geom_rug(sides = "bl")+labs( x ="Calorías(Kcal)", y = "Azúcar(g)")+
-  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
-  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
-
-
-
-
-#grid.arrange(c,d, ncol = 2)
-
-
-
-cor(menu2$Carbohydrates[menu2$Category=="Coffee & Tea" ],menu2$Calories[menu2$Category=="Coffee & Tea"]) #0.94
-cor(menu2$Carbohydrates[menu2$Category=="Salads" ],menu2$Calories[menu2$Category=="Salads"]) #0.78
-cor(menu2$Carbohydrates[menu2$Category=="Desserts" ],menu2$Calories[menu2$Category=="Desserts"])
-
 
 
 
@@ -203,14 +172,18 @@ q3=qplot(menu2$Sugars, geom = c("histogram"), fill = I("seagreen"), xlab = "Azúc
 grid.arrange(q,q1,q2,q3, ncol = 2)
 
 
+q3=qplot(menu3$Sodium.DV, geom = c("histogram"), fill = I("seagreen"), xlab = "Sodio VDR (%)", ylab = "Densidad",data=menu3,facets = ~Category)+theme(axis.title = element_text( face="bold",size=rel(0.8)))
 
 
+#glucidos
 
-#Glucidos con antioxidantes
+q=qplot( Calories,Carbohydrates,data = menu3, facets = ~Category,col=Productos)
 
+q+geom_rug(sides = "bl", col="Black")+labs( x ="Calorías(Kcal)", y = "Carbohidratos(g)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
-
-q=qplot( menu2$Protein,menu2$Carbohydrates,data = menu2, facets = ~Category,col=Productos)
+q=qplot( Protein,Carbohydrates,data = menu3, facets = ~Category,col=Productos)
 
 q+geom_rug(sides = "bl", col="Black")+labs( x ="Proteínas (g)", y = "Carbohidratos (g)")+
   theme(axis.title = element_text( face="bold",size=rel(0.8)))+
@@ -218,22 +191,6 @@ q+geom_rug(sides = "bl", col="Black")+labs( x ="Proteínas (g)", y = "Carbohidrat
 
 
 
-q=qplot( menu2$Dietary.Fiber,menu2$Carbohydrates,data = menu2, facets = ~Category,col=Productos)
-
-q+geom_rug(sides = "bl")+labs( x ="Fibra (g)", y = "Carbohidratos (g)")+
-  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
-  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
-
-
-
-
-qplot( menu2$Dietary.Fiber,menu2$Sugars, data = menu2, facets = ~Category, colour = Productos)
-
-q=qplot( menu2$Protein,menu2$Carbohydrates,data = menu2, facets = ~Category,col=Productos)
-
-q+geom_rug(sides = "bl")+labs( x ="Proteínas (g)", y = "Carbohidratos (g)")+
-  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
-  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
 q=qplot( menu2$Protein,menu2$Sugars,data = menu2, facets = ~Category,col=Productos)
 
@@ -241,31 +198,14 @@ q+geom_rug(sides = "bl")+labs( x ="Proteínas (g)", y = "az (g)")+
   theme(axis.title = element_text( face="bold",size=rel(0.8)))+
   theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
-base$categoria=menu2$Category
+categoria=menu3$Category
 
-q=qplot( menu2$Calories,menu2$Sugars,data = menu2,col=categoria)
+q=qplot(menu3$Calories,menu3$Sugars,data = menu3,col=categoria)
 q+geom_rug(sides = "bl",col="Black")+labs( x ="Calorías (Kcal)", y = "Azúcar (g)")+
   theme(axis.title = element_text( face="bold",size=rel(0.8)))+
   theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
 
-
-
-
-
-
-q=qplot( menu2$Protein[menu2$Category=="Café y Té"],menu2$Carbohydrates[menu2$Category=="Café y Té"],data = menu2)
-
-
-
-
-
-plot(menu2$Calories[menu2$Category=="Café y Té"],menu2$Carbohydrates[menu2$Category=="Café y Té"], col=menu2$Productos)
-identify (menu2$Protein[menu2$Category=="Café y Té"],menu2$Carbohydrates[menu2$Category=="Café y Té"],menu2$Productos)
-cor(menu2$Calories[menu2$Category=="Café y Té"],menu2$Carbohydrates[menu2$Category=="Café y Té"])
-
-
-library(lattice)
 
 
 ##########SODIO
@@ -275,27 +215,11 @@ library(lattice)
 ##### Sodio y calorias
 
 
-
-q=qplot( menu2$Sodium,menu2$Calories,data = menu2, facets = ~Category,col=Productos)
-
-q+geom_rug(sides = "bl")+labs( x ="Sodio (mg)", y = "Calorías (KCal)")+
-  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
-  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
-
-
-
-
 q=qplot( menu2$Sodium,menu2$Protein,data = menu2, facets = ~Category,col=Productos)
 
 q+geom_rug(sides = "bl")+labs( x ="Sodio (mg)", y = "Proteína (g)")+
   theme(axis.title = element_text( face="bold",size=rel(0.8)))+
   theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
-
-
-#### no se  creo que no hay relacon lineal
-
-qplot( menu2$Sodium,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = Productos)
-
 
 
 
