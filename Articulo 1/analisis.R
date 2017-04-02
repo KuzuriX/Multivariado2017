@@ -175,14 +175,11 @@ theme( legend.title = element_text(face = "bold",size=9),legend.text = element_t
 
 
 
-
 q=qplot( menu2$Calories,menu2$Sugars,data = menu2, facets = ~Category,col=Productos)
 
 q+geom_rug(sides = "bl")+labs( x ="Calorías(Kcal)", y = "Azúcar(g)")+
   theme(axis.title = element_text( face="bold",size=rel(0.8)))+
   theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
-
-
 
 
 
@@ -198,7 +195,7 @@ cor(menu2$Carbohydrates[menu2$Category=="Desserts" ],menu2$Calories[menu2$Catego
 
 
 
-#
+#HISTOGRAMAS
 
 
 qplot(menu2$Total.Fat,data=menu2,facets = ~Category,geom="histogram")
@@ -208,20 +205,31 @@ qplot(menu2$Protein,data=menu2,facets = ~Category,geom="histogram")
 #Glucidos con antioxidantes
 
 
-qplot( menu2$Protein,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = Productos)
-qplot( menu2$Iron.DV,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = Productos)
-qplot( menu2$Dietary.Fiber,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = Productos)
-qplot( menu2$Vitamin.A.DV,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = Productos)
-qplot( menu2$Vitamin.C.DV,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = Productos)
+
+q=qplot( menu2$Protein,menu2$Carbohydrates,data = menu2, facets = ~Category,col=Productos)
+
+q+geom_rug(sides = "bl")+labs( x ="Proteínas (g)", y = "Carbohidratos (g)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
+
+
+
+q=qplot( menu2$Dietary.Fiber,menu2$Carbohydrates,data = menu2, facets = ~Category,col=Productos)
+
+q+geom_rug(sides = "bl")+labs( x ="Fibra (g)", y = "Carbohidratos (g)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
 
 
 
-qplot( menu2$Protein,menu2$Sugars, data = menu2, facets = ~Category, colour = Productos)
-qplot( menu2$Iron.DV,menu2$Sugars, data = menu2, facets = ~Category, colour = Productos)
 qplot( menu2$Dietary.Fiber,menu2$Sugars, data = menu2, facets = ~Category, colour = Productos)
-qplot( menu2$Vitamin.A.DV,menu2$Sugars, data = menu2, facets = ~Category, colour = Productos)
-qplot( menu2$Vitamin.C.DV,menu2$Sugars, data = menu2, facets = ~Category, colour = Productos)
+
+q=qplot( menu2$Protein,menu2$Carbohydrates,data = menu2, facets = ~Category,col=Productos)
+
+q+geom_rug(sides = "bl")+labs( x ="Proteínas (g)", y = "Carbohidratos (g)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
 
 
