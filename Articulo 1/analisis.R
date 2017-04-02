@@ -118,7 +118,7 @@ levels(menu2$Type)
 menu2$Productos= menu2$Productos
 
 
-levels(menu2$Category)[1]= "Carne y Pollo" 
+levels(menu2$Category)[1]= "Carne y Cerdo" 
 levels(menu2$Category)[2]= "Bebidas"
 levels(menu2$Category)[3]= "Desayunos"
 levels(menu2$Category)[4]= "Pollo y Pescado" 
@@ -160,13 +160,30 @@ a
 b<- qplot(menu2$Sugars, geom = c("density"), fill = I("tomato"), xlab = "Azúcar", ylab = "Densidad", data = menu2,facets = ~ Category)
 b
 
+#col1=c("antiquewhite1","aquamarine4","black", "blue4","brown3","cadetblue1","chartreuse1","chocolate1","cyan","darkgoldenrod1","darkmagenta")
+#col2=c("deeppink","lightcoral","lightgoldenrod1","mediumorchid1","orangered","seagreen1","yellowgreen","slategray4","thistle1","peru","palevioletred")
+#col=c(col1,col2)
+
+q=qplot( menu2$Calories,menu2$Carbohydrates,data = menu2, facets = ~Category,col=Productos)
+
+q+geom_rug(sides = "bl")+labs( x ="Calorías(Kcal)", y = "Carbohidratos(g)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
+
+#cafe y Te
 
 
 
-qplot( menu2$Calories,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = Productos)
 
 
-qplot( menu2$Calories,menu2$Sugars, data = menu2, facets = ~Category, colour = Productos)
+q=qplot( menu2$Calories,menu2$Sugars,data = menu2, facets = ~Category,col=Productos)
+
+q+geom_rug(sides = "bl")+labs( x ="Calorías(Kcal)", y = "Azúcar(g)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
+
+
+
 
 
 
@@ -178,6 +195,15 @@ cor(menu2$Carbohydrates[menu2$Category=="Coffee & Tea" ],menu2$Calories[menu2$Ca
 cor(menu2$Carbohydrates[menu2$Category=="Salads" ],menu2$Calories[menu2$Category=="Salads"]) #0.78
 cor(menu2$Carbohydrates[menu2$Category=="Desserts" ],menu2$Calories[menu2$Category=="Desserts"])
 
+
+
+
+#
+
+
+qplot(menu2$Total.Fat,data=menu2,facets = ~Category,geom="histogram")
+qplot(menu2$Carbohydrates,data=menu2,facets = ~Category,geom="histogram")
+qplot(menu2$Protein,data=menu2,facets = ~Category,geom="histogram")
 
 #Glucidos con antioxidantes
 
@@ -247,8 +273,12 @@ menu2$insaturada= menu2$Total.Fat-(menu2$Trans.Fat+menu2$Saturated.Fat)
 e <- ggplot(menu2, aes(Total.Fat, Calories))
 e+geom_point()
 
-qplot(Calories, Total.Fat, data = menu2, facets = ~Category, colour = Productos)
 
+q=qplot(Calories,Total.Fat,data = menu2, facets = ~Category,col=Productos)
+
+q+geom_rug(sides = "bl")+labs( x ="Calorías(Kcal)", y = "Grasa Total (mg)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
 
 
@@ -265,7 +295,11 @@ qplot(Calories,insaturada, data = menu2, facets = ~Category, colour = Productos)
 e <- ggplot(menu2, aes(Saturated.Fat , Calories))
 e+geom_point()
 
-qplot(Calories,Saturated.Fat, data = menu2, facets = ~Category, colour = Productos)
+q=qplot(Calories,Saturated.Fat,data = menu2, facets = ~Category,col=Productos)
+
+q+geom_rug(sides = "bl")+labs( x ="Calorías(Kcal)", y = "Grasa Saturada (mg)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
 
 
@@ -276,6 +310,8 @@ e <- ggplot(menu2,aes(Trans.Fat, Calories))
 e+geom_point()
 
 qplot(Calories,Trans.Fat, data = menu2, facets = ~Category, colour = Type)
+
+plot(menu2$Calories,menu2$Trans.Fat,col=menu2$Productos)
 
 
 
@@ -293,9 +329,18 @@ qplot( menu2$Trans.Fat,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, col
 
 
 qplot( menu2$Saturated.Fat,menu2$Protein, data = menu2, facets = ~Category, colour = Productos)
-qplot( menu2$Saturated.Fat,menu2$Iron.DV, data = menu2, facets = ~Category, colour = Productos)
 qplot( menu2$Saturated.Fat,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = Productos)
-qplot( menu2$Saturated.Fat,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = Productos)
+
+
+q=qplot(Protein,Saturated.Fat,data = menu2, facets = ~Category,col=Productos)
+
+q+geom_rug(sides = "bl")+labs( x ="Proteínas (g)", y = "Grasa Saturada (mg)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
+
+
+
+
 
 
 
@@ -319,7 +364,11 @@ qplot(insaturada, Cholesterol, data = menu2, facets = ~Category, colour = Produc
 
 qplot( Saturated.Fat,Cholesterol, data = menu2, facets = ~Category, colour = Productos)
 
-qplot( Trans.Fat,Cholesterol, data = menu2, facets = ~Category, colour = Productos)
+q=qplot(Cholesterol,Saturated.Fat,data = menu2, facets = ~Category,col=Productos)
+
+q+geom_rug(sides = "bl")+labs( x ="Colesterol (mg)", y = "Grasa Saturada (mg)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
 
 
