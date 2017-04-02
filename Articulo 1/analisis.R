@@ -155,7 +155,7 @@ levels(menu2$Category)[9]= "Snacks"
 
 #densidad de las variables 
 
-a <- qplot(menu2$Carbohydrates, geom = c("density"), fill = I("tomato"), xlab = "Carbohidratos", ylab = "Densidad", data = menu2,facets = ~ Category)
+a <- qplot(menu2$Carbohydrates, geom = c("histogram"), fill = I("tomato"), xlab = "Carbohidratos", ylab = "Densidad", data = menu2,facets = ~ Category)
 a
 b<- qplot(menu2$Sugars, geom = c("density"), fill = I("tomato"), xlab = "Azúcar", ylab = "Densidad", data = menu2,facets = ~ Category)
 b
@@ -197,10 +197,22 @@ cor(menu2$Carbohydrates[menu2$Category=="Desserts" ],menu2$Calories[menu2$Catego
 
 #HISTOGRAMAS
 
+q=qplot(menu2$Total.Fat, geom = c("histogram"), fill = I("mediumaquamarine"), xlab = "Grasa Total (mg)", ylab = "Densidad", data = menu2,facets = ~ Category)
+q+theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
-qplot(menu2$Total.Fat,data=menu2,facets = ~Category,geom="histogram")
-qplot(menu2$Carbohydrates,data=menu2,facets = ~Category,geom="histogram")
-qplot(menu2$Protein,data=menu2,facets = ~Category,geom="histogram")
+
+q=qplot(menu2$Carbohydrates, geom = c("histogram"), fill = I("plum4"), xlab = "Carbohidratos (g)", ylab = "Densidad", data = menu2,facets = ~ Category)
+q+theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
+
+
+q=qplot(menu2$Protein, geom = c("histogram"), fill = I("turquoise3"), xlab = "Proteinas (g)", ylab = "Densidad", data = menu2,facets = ~ Category)
+q+theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
+
+
+
 
 #Glucidos con antioxidantes
 
@@ -240,22 +252,27 @@ q+geom_rug(sides = "bl")+labs( x ="Proteínas (g)", y = "Carbohidratos (g)")+
 
 ##### Sodio y calorias
 
-qplot(Sodium, Calories, data = menu2, facets = ~Category, colour = Productos)
+
+
+q=qplot( menu2$Sodium,menu2$Calories,data = menu2, facets = ~Category,col=Productos)
+
+q+geom_rug(sides = "bl")+labs( x ="Sodio (mg)", y = "Calorías (KCal)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
 
 
 
-###sodio y antioxidantes 
+q=qplot( menu2$Sodium,menu2$Protein,data = menu2, facets = ~Category,col=Productos)
 
+q+geom_rug(sides = "bl")+labs( x ="Sodio (mg)", y = "Proteína (g)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
-
-qplot( menu2$Sodium,menu2$Protein, data = menu2, facets = ~Category, colour = Productos)
 
 #### no se  creo que no hay relacon lineal
-qplot( menu2$Sodium,menu2$Iron.DV, data = menu2, facets = ~Category, colour = Productos)
-qplot( menu2$Sodium,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = Productos)
-qplot( menu2$Sodium,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = Productos)
 
+qplot( menu2$Sodium,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = Productos)
 
 
 
@@ -467,6 +484,58 @@ cor(menu2$Sodium,menu2$Serving.Size)
 
 M <- cor(menu2[,3:25])
 corrplot(M, method="circle")
+
+
+summary(menu2$Calories[menu2$Category=="Carne y Cerdo"])
+sd(menu2$Calories[menu2$Category=="Carne y Cerdo"])
+summary(menu2$insaturada[menu2$Category=="Carne y Cerdo"])
+sd(menu2$insaturada[menu2$Category=="Carne y Cerdo"])
+summary(menu2$Saturated.Fat[menu2$Category=="Carne y Cerdo"])
+sd(menu2$Saturated.Fat[menu2$Category=="Carne y Cerdo"])
+summary(menu2$Trans.Fat[menu2$Category=="Carne y Cerdo"])
+sd(menu2$Trans.Fat[menu2$Category=="Carne y Cerdo"])
+summary(menu2$Cholesterol[menu2$Category=="Carne y Cerdo"])
+sd(menu2$Cholesterol[menu2$Category=="Carne y Cerdo"])
+summary(menu2$Sodium[menu2$Category=="Carne y Cerdo"])
+sd(menu2$Sodium[menu2$Category=="Carne y Cerdo"])
+summary(menu2$Carbohydrates[menu2$Category=="Carne y Cerdo"])
+sd(menu2$Carbohydrates[menu2$Category=="Carne y Cerdo"])
+summary(menu2$Sugars[menu2$Category=="Carne y Cerdo"])
+sd(menu2$Sugars[menu2$Category=="Carne y Cerdo"])
+summary(menu2$Protein[menu2$Category=="Carne y Cerdo"])
+sd(menu2$Protein[menu2$Category=="Carne y Cerdo"])
+summary(menu2$Dietary.Fiber[menu2$Category=="Carne y Cerdo"])
+sd(menu2$Dietary.Fiber[menu2$Category=="Carne y Cerdo"])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
