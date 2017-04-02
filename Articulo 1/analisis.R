@@ -40,32 +40,33 @@ new_names <- gsub(pattern = "*....Daily.Value.", replacement=".DV", names(menu))
 names(menu) <- new_names
 
 menu$diet[str_detect(menu$Item, "Diet|fat|Fat|Grilled|^Coffe|Free")]<-1
-menu$subcategory[str_detect(menu$Item, "Coca-Cola|Coke")]<-"cocacola"
-menu$subcategory[str_detect(menu$Item, "Dr Pepper")]<-"pepper"
-menu$subcategory[str_detect(menu$Item, "Sprite")]<-"sprite"
-menu$subcategory[str_detect(menu$Item, "Minute Maid")]<-"minutemaid"
-menu$subcategory[str_detect(menu$Item, "Sandwich")]<-"sandwich"
-menu$subcategory[str_detect(menu$Item, "McWrap")]<-"wrap"
-menu$subcategory[str_detect(menu$Item, "Nuggets")]<-"nuggets"
-menu$subcategory[str_detect(menu$Item, "McMuffin")]<-"McMuffin"
-menu$subcategory[str_detect(menu$Item, "Biscuit")]<-"Biscuit"
-menu$subcategory[str_detect(menu$Item, "McGriddles")]<-"McGriddles"
-menu$subcategory[str_detect(menu$Item, "Big Breakfast")]<-"Big Breakfast"
-menu$subcategory[str_detect(menu$Item, "Tea")]<-"Tea"
-menu$subcategory[str_detect(menu$Item, "Coffee")]<-"Coffee"
-menu$subcategory[str_detect(menu$Item, "Latte")]<-"Latte"
-menu$subcategory[str_detect(menu$Item, "Mocha")]<-"Mocha"
-menu$subcategory[str_detect(menu$Item, "Chocolate")]<-"Chocolate"
-menu$subcategory[str_detect(menu$Item, "Iced")]<-"Iced Coffe"
-menu$subcategory[str_detect(menu$Item, "Frapp")]<-"Frappe"
-menu$subcategory[str_detect(menu$Item, "Shake")]<-"Milk Shake"
-menu$subcategory[str_detect(menu$Item, "Smoothie")]<-"Smoothie"
-menu$subcategory[str_detect(menu$Item, "McFlurry")]<-"McFlurry"
-
+menu$Productos[str_detect(menu$Item, "Coca-Cola|Coke")]<-"coca cola"
+menu$Productos[str_detect(menu$Item, "Dr Pepper")]<-"pepper"
+menu$Productos[str_detect(menu$Item, "Sprite")]<-"sprite"
+menu$Productos[str_detect(menu$Item, "Minute Maid")]<-"minute maid"
+menu$Productos[str_detect(menu$Item, "Sandwich")]<-"sandwich"
+menu$Productos[str_detect(menu$Item, "McWrap")]<-"wrap"
+menu$Productos[str_detect(menu$Item, "Nuggets")]<-"nuggets"
+menu$Productos[str_detect(menu$Item, "McMuffin")]<-"McMuffin"
+menu$Productos[str_detect(menu$Item, "Biscuit")]<-"Biscuit"
+menu$Productos[str_detect(menu$Item, "McGriddles")]<-"McGriddles"
+menu$Productos[str_detect(menu$Item, "Big Breakfast")]<-"Big Breakfast"
+menu$Productos[str_detect(menu$Item, "Tea")]<-"Té"
+menu$Productos[str_detect(menu$Item, "Coffee")]<-"Café"
+menu$Productos[str_detect(menu$Item, "Latte")]<-"Latte"
+menu$Productos[str_detect(menu$Item, "Mocha")]<-"Mocha"
+menu$Productos[str_detect(menu$Item, "Chocolate")]<-"Chocolate"
+menu$Productos[str_detect(menu$Item, "Iced")]<-"Iced Coffe"
+menu$Productos[str_detect(menu$Item, "Frapp")]<-"Frappe"
+menu$Productos[str_detect(menu$Item, "Shake")]<-"Milk Shake"
+menu$Productos[str_detect(menu$Item, "Smoothie")]<-"Smoothie"
+menu$Productos[str_detect(menu$Item, "McFlurry")]<-"McFlurry"
 
 
 menu$diet[is.na(menu$diet)] <- 0
-menu$subcategory[is.na(menu$subcategory)] <- "Others"
+menu$Productos[is.na(menu$Productos)] <- "Otro"
+
+
 
 
 #menu$Total.Fat.DV<-menu$Total.Fat.DV/65
@@ -104,15 +105,29 @@ menu2$Type <- rep("drinks.ml", nrow(menu2))
 food.g$Type <- rep("food.g", nrow(food.g))
 menu2 <- rbind(menu2,food.g)
 
-table(menu2$Category, menu2$subcategory)
+table(menu2$Category, menu2$Productos)
 table(menu2$Type)
 
-is.factor(menu2$subcategory)
-menu2$subcategory= as.factor(menu2$subcategory)
-levels(menu2$subcategory)
+is.factor(menu2$Productos)
+menu2$Productos= as.factor(menu2$Productos)
+levels(menu2$Productos)
 
 menu2$Type= as.factor(menu2$Type)
 levels(menu2$Type)
+
+menu2$Productos= menu2$Productos
+
+
+levels(menu2$Category)[1]= "Carne y Pollo" 
+levels(menu2$Category)[2]= "Bebidas"
+levels(menu2$Category)[3]= "Desayunos"
+levels(menu2$Category)[4]= "Pollo y Pescado" 
+levels(menu2$Category)[5]= "Café y Té" 
+levels(menu2$Category)[6]= "Postres" 
+levels(menu2$Category)[7]= "Ensaladas" 
+levels(menu2$Category)[8]= "Smothies"
+levels(menu2$Category)[9]= "Snacks" 
+
 
 ###################### analisis ###########################################3
 
@@ -148,10 +163,10 @@ b
 
 
 
-qplot( menu2$Calories,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Calories,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = Productos)
 
 
-qplot( menu2$Calories,menu2$Sugars, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Calories,menu2$Sugars, data = menu2, facets = ~Category, colour = Productos)
 
 
 
@@ -167,20 +182,20 @@ cor(menu2$Carbohydrates[menu2$Category=="Desserts" ],menu2$Calories[menu2$Catego
 #Glucidos con antioxidantes
 
 
-qplot( menu2$Protein,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Iron.DV,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Dietary.Fiber,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Vitamin.A.DV,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Vitamin.C.DV,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Protein,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Iron.DV,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Dietary.Fiber,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Vitamin.A.DV,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Vitamin.C.DV,menu2$Carbohydrates, data = menu2, facets = ~Category, colour = Productos)
 
 
 
 
-qplot( menu2$Protein,menu2$Sugars, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Iron.DV,menu2$Sugars, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Dietary.Fiber,menu2$Sugars, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Vitamin.A.DV,menu2$Sugars, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Vitamin.C.DV,menu2$Sugars, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Protein,menu2$Sugars, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Iron.DV,menu2$Sugars, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Dietary.Fiber,menu2$Sugars, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Vitamin.A.DV,menu2$Sugars, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Vitamin.C.DV,menu2$Sugars, data = menu2, facets = ~Category, colour = Productos)
 
 
 
@@ -191,7 +206,7 @@ qplot( menu2$Vitamin.C.DV,menu2$Sugars, data = menu2, facets = ~Category, colour
 
 ##### Sodio y calorias
 
-qplot(Sodium, Calories, data = menu2, facets = ~Category, colour = subcategory)
+qplot(Sodium, Calories, data = menu2, facets = ~Category, colour = Productos)
 
 
 
@@ -200,12 +215,12 @@ qplot(Sodium, Calories, data = menu2, facets = ~Category, colour = subcategory)
 
 
 
-qplot( menu2$Sodium,menu2$Protein, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Sodium,menu2$Protein, data = menu2, facets = ~Category, colour = Productos)
 
 #### no se  creo que no hay relacon lineal
-qplot( menu2$Sodium,menu2$Iron.DV, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Sodium,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Sodium,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Sodium,menu2$Iron.DV, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Sodium,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Sodium,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = Productos)
 
 
 
@@ -232,7 +247,7 @@ menu2$insaturada= menu2$Total.Fat-(menu2$Trans.Fat+menu2$Saturated.Fat)
 e <- ggplot(menu2, aes(Total.Fat, Calories))
 e+geom_point()
 
-qplot(Calories, Total.Fat, data = menu2, facets = ~Category, colour = subcategory)
+qplot(Calories, Total.Fat, data = menu2, facets = ~Category, colour = Productos)
 
 
 
@@ -241,7 +256,7 @@ qplot(Calories, Total.Fat, data = menu2, facets = ~Category, colour = subcategor
 e <- ggplot(menu2, aes(insaturada, Calories))
 e+geom_point()
 
-qplot(Calories,insaturada, data = menu2, facets = ~Category, colour = subcategory)
+qplot(Calories,insaturada, data = menu2, facets = ~Category, colour = Productos)
 
 
 
@@ -250,7 +265,7 @@ qplot(Calories,insaturada, data = menu2, facets = ~Category, colour = subcategor
 e <- ggplot(menu2, aes(Saturated.Fat , Calories))
 e+geom_point()
 
-qplot(Calories,Saturated.Fat, data = menu2, facets = ~Category, colour = subcategory)
+qplot(Calories,Saturated.Fat, data = menu2, facets = ~Category, colour = Productos)
 
 
 
@@ -270,24 +285,24 @@ qplot(Calories,Trans.Fat, data = menu2, facets = ~Category, colour = Type)
 
 
 # no hay relacion lineal en ninguna 
-qplot( menu2$Trans.Fat,menu2$Protein, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Trans.Fat,menu2$Iron.DV, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Trans.Fat,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Trans.Fat,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Trans.Fat,menu2$Protein, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Trans.Fat,menu2$Iron.DV, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Trans.Fat,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Trans.Fat,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = Productos)
 
 
 
-qplot( menu2$Saturated.Fat,menu2$Protein, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Saturated.Fat,menu2$Iron.DV, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Saturated.Fat,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Saturated.Fat,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Saturated.Fat,menu2$Protein, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Saturated.Fat,menu2$Iron.DV, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Saturated.Fat,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Saturated.Fat,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = Productos)
 
 
 
-qplot( menu2$insaturada,menu2$Protein, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$insaturada,menu2$Iron.DV, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$insaturada,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$insaturada,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$insaturada,menu2$Protein, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$insaturada,menu2$Iron.DV, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$insaturada,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$insaturada,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = Productos)
 
 
 
@@ -297,14 +312,14 @@ qplot( menu2$insaturada,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, co
 
 #insat y colest
 
-qplot(insaturada, Cholesterol, data = menu2, facets = ~Category, colour = subcategory)
+qplot(insaturada, Cholesterol, data = menu2, facets = ~Category, colour = Productos)
 
 
 #colesterol y saturada
 
-qplot( Saturated.Fat,Cholesterol, data = menu2, facets = ~Category, colour = subcategory)
+qplot( Saturated.Fat,Cholesterol, data = menu2, facets = ~Category, colour = Productos)
 
-qplot( Trans.Fat,Cholesterol, data = menu2, facets = ~Category, colour = subcategory)
+qplot( Trans.Fat,Cholesterol, data = menu2, facets = ~Category, colour = Productos)
 
 
 
@@ -312,10 +327,10 @@ qplot( Trans.Fat,Cholesterol, data = menu2, facets = ~Category, colour = subcate
 #colesterol con antiox
 
 
-qplot( menu2$Cholesterol,menu2$Protein, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Cholesterol,menu2$Iron.DV, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Cholesterol,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = subcategory)
-qplot( menu2$Cholesterol,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = subcategory)
+qplot( menu2$Cholesterol,menu2$Protein, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Cholesterol,menu2$Iron.DV, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Cholesterol,menu2$Dietary.Fiber, data = menu2, facets = ~Category, colour = Productos)
+qplot( menu2$Cholesterol,menu2$Vitamin.A.DV, data = menu2, facets = ~Category, colour = Productos)
 
 
 
