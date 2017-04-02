@@ -125,7 +125,7 @@ levels(menu2$Category)[4]= "Pollo y Pescado"
 levels(menu2$Category)[5]= "Café y Té" 
 levels(menu2$Category)[6]= "Postres" 
 levels(menu2$Category)[7]= "Ensaladas" 
-levels(menu2$Category)[8]= "Smothies"
+levels(menu2$Category)[8]= "Smoothies"
 levels(menu2$Category)[9]= "Snacks" 
 
 
@@ -166,12 +166,9 @@ b
 
 q=qplot( menu2$Calories,menu2$Carbohydrates,data = menu2, facets = ~Category,col=Productos)
 
-q+geom_rug(sides = "bl")+labs( x ="Calorías(Kcal)", y = "Carbohidratos(g)")+
+q+geom_rug(sides = "bl", col="Black")+labs( x ="Calorías(Kcal)", y = "Carbohidratos(g)")+
   theme(axis.title = element_text( face="bold",size=rel(0.8)))+
 theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
-
-#cafe y Te
-
 
 
 
@@ -197,19 +194,14 @@ cor(menu2$Carbohydrates[menu2$Category=="Desserts" ],menu2$Calories[menu2$Catego
 
 #HISTOGRAMAS
 
-q=qplot(menu2$Total.Fat, geom = c("histogram"), fill = I("mediumaquamarine"), xlab = "Grasa Total (mg)", ylab = "Densidad", data = menu2,facets = ~ Category)
-q+theme(axis.title = element_text( face="bold",size=rel(0.8)))+
-  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
+q=qplot(menu2$Calories, geom = c("histogram"), fill = I("sienna1"), xlab = "Calorías (Kcal)", ylab = "Densidad", data = menu2,facets = ~ Category)+theme(axis.title = element_text( face="bold",size=rel(0.8)))
+q1=qplot(menu2$Carbohydrates, geom = c("histogram"), fill = I("plum4"), xlab = "Carbohidratos (g)", ylab = "Densidad", data = menu2,facets = ~ Category)+theme(axis.title = element_text( face="bold",size=rel(0.8)))
+q2=qplot(menu2$Protein, geom = c("histogram"), fill = I("turquoise3"), xlab = "Proteínas (g)", ylab = "Densidad", data = menu2,facets = ~ Category)+theme(axis.title = element_text( face="bold",size=rel(0.8)))
+q3=qplot(menu2$Sugars, geom = c("histogram"), fill = I("seagreen"), xlab = "Azúcar (g)", ylab = "Densidad", data = menu2,facets = ~ Category)+theme(axis.title = element_text( face="bold",size=rel(0.8)))
+  
+grid.arrange(q,q1,q2,q3, ncol = 2)
 
-q=qplot(menu2$Carbohydrates, geom = c("histogram"), fill = I("plum4"), xlab = "Carbohidratos (g)", ylab = "Densidad", data = menu2,facets = ~ Category)
-q+theme(axis.title = element_text( face="bold",size=rel(0.8)))+
-  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
-
-
-q=qplot(menu2$Protein, geom = c("histogram"), fill = I("turquoise3"), xlab = "Proteinas (g)", ylab = "Densidad", data = menu2,facets = ~ Category)
-q+theme(axis.title = element_text( face="bold",size=rel(0.8)))+
-  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
 
 
@@ -220,7 +212,7 @@ q+theme(axis.title = element_text( face="bold",size=rel(0.8)))+
 
 q=qplot( menu2$Protein,menu2$Carbohydrates,data = menu2, facets = ~Category,col=Productos)
 
-q+geom_rug(sides = "bl")+labs( x ="Proteínas (g)", y = "Carbohidratos (g)")+
+q+geom_rug(sides = "bl", col="Black")+labs( x ="Proteínas (g)", y = "Carbohidratos (g)")+
   theme(axis.title = element_text( face="bold",size=rel(0.8)))+
   theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
@@ -243,7 +235,37 @@ q+geom_rug(sides = "bl")+labs( x ="Proteínas (g)", y = "Carbohidratos (g)")+
   theme(axis.title = element_text( face="bold",size=rel(0.8)))+
   theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
+q=qplot( menu2$Protein,menu2$Sugars,data = menu2, facets = ~Category,col=Productos)
 
+q+geom_rug(sides = "bl")+labs( x ="Proteínas (g)", y = "az (g)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
+
+base$categoria=menu2$Category
+
+q=qplot( menu2$Calories,menu2$Sugars,data = menu2,col=categoria)
+q+geom_rug(sides = "bl",col="Black")+labs( x ="Calorías (Kcal)", y = "Azúcar (g)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
+
+
+
+
+
+
+
+q=qplot( menu2$Protein[menu2$Category=="Café y Té"],menu2$Carbohydrates[menu2$Category=="Café y Té"],data = menu2)
+
+
+
+
+
+plot(menu2$Calories[menu2$Category=="Café y Té"],menu2$Carbohydrates[menu2$Category=="Café y Té"], col=menu2$Productos)
+identify (menu2$Protein[menu2$Category=="Café y Té"],menu2$Carbohydrates[menu2$Category=="Café y Té"],menu2$Productos)
+cor(menu2$Calories[menu2$Category=="Café y Té"],menu2$Carbohydrates[menu2$Category=="Café y Té"])
+
+
+library(lattice)
 
 
 ##########SODIO
@@ -509,7 +531,7 @@ sd(menu2$Dietary.Fiber[menu2$Category=="Carne y Cerdo"])
 
 
 
-
+table(menu2$Item,menu2$Category)
 
 
 
