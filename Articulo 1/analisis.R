@@ -164,13 +164,55 @@ menu3=subset(menu2,menu2$Sodium.DV<100)
 #HISTOGRAMAS
 
 
-q=qplot(menu2$Calories, geom = c("histogram"), fill = I("sienna1"), xlab = "Calorías (Kcal)", ylab = "Densidad", data = menu2,facets = ~ Category)+theme(axis.title = element_text( face="bold",size=rel(0.8)))
-q1=qplot(menu2$Carbohydrates, geom = c("histogram"), fill = I("plum4"), xlab = "Carbohidratos (g)", ylab = "Densidad", data = menu2,facets = ~ Category)+theme(axis.title = element_text( face="bold",size=rel(0.8)))
-q2=qplot(menu2$Protein, geom = c("histogram"), fill = I("turquoise3"), xlab = "Proteínas (g)", ylab = "Densidad", data = menu2,facets = ~ Category)+theme(axis.title = element_text( face="bold",size=rel(0.8)))
-q3=qplot(menu2$Sugars, geom = c("histogram"), fill = I("seagreen"), xlab = "Azúcar (g)", ylab = "Densidad", data = menu2,facets = ~ Category)+theme(axis.title = element_text( face="bold",size=rel(0.8)))
-  
-grid.arrange(q,q1,q2,q3, ncol = 2)
+q=qplot(menu2$Calories, geom = c("histogram"), fill = I("sienna1"), xlab = "Calorías (Kcal)", ylab = "Frecuencia", data = menu2,facets = ~ Category)+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  labs(title =" Frecuencia de las Calorías") +
+  theme (plot.title = element_text(size=rel(1), #Tamaño relativo de la letra del título
+                                   vjust=2, #Justificación vertical, para separarlo del gráfico
+                                   face="bold", #Letra negrilla. Otras posibilidades "plain", "italic", "bold" y "bold.italic"
+                                   color="Black", #Color del texto
+                                   lineheight=1.5)) 
 
+q=qplot(menu2$Calories, geom = c("histogram"), fill = I("sienna1"), xlab = "Calorías (Kcal)", ylab = "Frecuencia", data = menu2,facets = ~ Category)+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme (plot.title = element_text(size=rel(1), #Tamaño relativo de la letra del título
+                                   vjust=2, #Justificación vertical, para separarlo del gráfico
+                                   face="bold", #Letra negrilla. Otras posibilidades "plain", "italic", "bold" y "bold.italic"
+                                   color="Black", #Color del texto
+                                   lineheight=1.5)) 
+
+q1=qplot(menu2$Carbohydrates, geom = c("histogram"), fill = I("plum4"), xlab = "Carbohidratos (g)", ylab = "Frecuencia", data = menu2,facets = ~ Category)+
+theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  #labs(title =" Frecuencia de los Carbohidratos") +
+  theme(plot.title = element_text(size=rel(1), #Tamaño relativo de la letra del título
+                                   vjust=2, #Justificación vertical, para separarlo del gráfico
+                                   face="bold", #Letra negrilla. Otras posibilidades "plain", "italic", "bold" y "bold.italic"
+                                   color="Black", #Color del texto
+                                   lineheight=1.5) )
+
+grid.arrange(q,q1, ncol = 2)
+
+q2=qplot(menu2$Protein, geom = c("histogram"), fill = I("turquoise3"), xlab = "Proteínas (g)", ylab = "Frecuencia", data = menu2,facets = ~ Category)+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  labs(title =" Frecuencia de las Proteínas") +
+  theme(plot.title = element_text(size=rel(1), #Tamaño relativo de la letra del título
+                                  vjust=2, #Justificación vertical, para separarlo del gráfico
+                                  face="bold", #Letra negrilla. Otras posibilidades "plain", "italic", "bold" y "bold.italic"
+                                  color="Black", #Color del texto
+                                  lineheight=1.5) )
+
+
+q3=qplot(menu2$Total.Fat, geom = c("histogram"), fill = I("seagreen"), xlab = "Grasa Total (mg)", ylab = "Frecuencia", data = menu2,facets = ~ Category)+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  labs(title =" Frecuencia de Grasa Total") +
+  theme(plot.title = element_text(size=rel(1), #Tamaño relativo de la letra del título
+                                  vjust=2, #Justificación vertical, para separarlo del gráfico
+                                  face="bold", #Letra negrilla. Otras posibilidades "plain", "italic", "bold" y "bold.italic"
+                                  color="Black", #Color del texto
+                                  lineheight=1.5) )
+grid.arrange(q2,q3, ncol = 2)
+
+#sodio
 
 q3=qplot(menu3$Sodium.DV, geom = c("histogram"), fill = I("seagreen"), xlab = "Sodio VDR (%)", ylab = "Densidad",data=menu3,facets = ~Category)+theme(axis.title = element_text( face="bold",size=rel(0.8)))
 
@@ -250,6 +292,11 @@ q=qplot(Calories,Total.Fat,data = menu2, facets = ~Category,col=Productos)
 q+geom_rug(sides = "bl")+labs( x ="Calorías(Kcal)", y = "Grasa Total (mg)")+
   theme(axis.title = element_text( face="bold",size=rel(0.8)))+
   theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
+q=qplot(Calories,Total.Fat,data = menu3, facets,col=Category)
+
+q+geom_rug(sides = "bl", col="Black")+labs( x ="Calorías(Kcal)", y = "Grasa Total (mg)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
 
 
 
@@ -258,6 +305,12 @@ e <- ggplot(menu2, aes(insaturada, Calories))
 e+geom_point()
 
 qplot(Calories,insaturada, data = menu2, facets = ~Category, colour = Productos)
+
+qplot(Protein,insaturada, data = menu3, facets = ~Category, colour = Productos)+
+geom_rug(sides = "bl",col="Black")+labs( x ="Proteínas (g)", y = "Grasa Insaturada (mg)")+
+  theme(axis.title = element_text( face="bold",size=rel(0.8)))+
+  theme( legend.title = element_text(face = "bold",size=9),legend.text = element_text(size = 8))
+
 
 
 
